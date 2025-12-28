@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A smart library management system for students.">
+    <title>Smart Library</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts for a Premium Look without Frameworks -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- AUTH SECTION (Initial View) -->
+    <div id="authView" class="auth-container">
+        <div class="auth-box" id="authBox">
+            <!-- Sign Up Form -->
+            <div class="form-container sign-up-container">
+                <form id="signupForm" action="#">
+                    <h1>Create Account</h1>
+                    <div class="social-container">
+                        <span class="circle-icon">G</span>
+                        <span class="circle-icon">L</span>
+                        <span class="circle-icon">In</span>
+                    </div>
+                    <span>or use your email for registration</span>
+                    <input type="text" placeholder="Name" required />
+                    <input type="email" placeholder="Email" required />
+                    <input type="password" placeholder="Password" required />
+                    <button type="submit" class="btn-auth">Sign Up</button>
+                    <p class="mobile-toggle">Already have an account? <a href="#" id="mobileLoginBtn">Sign In</a></p>
+                </form>
+            </div>
+
+            <!-- Sign In Form -->
+            <div class="form-container sign-in-container">
+                <form id="loginForm" action="#">
+                    <h1>Sign In</h1>
+                    <div class="social-container">
+                        <span class="circle-icon">G</span>
+                        <span class="circle-icon">L</span>
+                        <span class="circle-icon">In</span>
+                    </div>
+                    <span>or use your account</span>
+                    <input type="email" placeholder="Email" required />
+                    <input type="password" placeholder="Password" required />
+                    <a href="#" class="forgot-pass" id="forgotPassBtn">Forgot your password?</a>
+                    <button type="submit" class="btn-auth">Sign In</button>
+                    <p class="mobile-toggle">New here? <a href="#" id="mobileSignupBtn">Sign Up</a></p>
+                </form>
+            </div>
+
+            <!-- Overlay for Animation -->
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>Welcome Back!</h1>
+                        <p>To keep connected with us please login with your personal info</p>
+                        <button class="ghost" id="signInBtn">Sign In</button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1>Hello, Student!</h1>
+                        <p>Enter your personal details and start your journey with us</p>
+                        <button class="ghost" id="signUpBtn">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP DASHBOARD (Hidden Initially) -->
+    <div id="dashboardView" style="display: none;">
+        <header class="app-header">
+            <div class="container header-content">
+                <div class="brand">
+                    <h1>📚 Smart Library</h1>
+                    <p>University Library Portal</p>
+                </div>
+                <div class="header-actions">
+                    <button id="profileBtn" class="btn btn-primary btn-sm">👤 My Profile</button>
+                    <button id="logoutBtn" class="btn btn-secondary btn-sm">Log Out</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- Search Section -->
+            <section class="search-wrapper">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search by title, author, or ISBN..."
+                        aria-label="Search books">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <p id="resultCount" class="meta-text">Showing all available books</p>
+            </section>
+
+            <!-- Dynamic Book Grid -->
+            <section id="bookGrid" class="book-grid">
+                <!-- Book Cards Injected Here -->
+            </section>
+        </main>
+
+        <!-- Detailed View Modal -->
+        <div id="detailsModal" class="modal-overlay" aria-hidden="true">
+            <div class="modal-card" role="dialog" aria-modal="true">
+                <header class="modal-header">
+                    <h2 id="modalTitle">Book Title</h2>
+                    <button class="close-icon" aria-label="Close modal">&times;</button>
+                </header>
+                <div class="modal-body">
+                    <div class="info-row">
+                        <span class="label">Author</span>
+                        <span id="modalAuthor" class="value">Author Name</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Status</span>
+                        <span id="modalStatus" class="tag">Available</span>
+                    </div>
+                    <div class="info-row description">
+                        <span class="label">Description</span>
+                        <p id="modalDesc">No description available.</p>
+                    </div>
+                </div>
+                <footer class="modal-footer">
+                    <button class="btn btn-secondary close-btn">Close</button>
+                </footer>
+            </div>
+        </div>
+
+        <!-- Request Book Modal -->
+        <div id="requestModal" class="modal-overlay" aria-hidden="true">
+            <div class="modal-card" role="dialog" aria-modal="true">
+                <header class="modal-header">
+                    <h2>Request Book</h2>
+                    <button class="close-icon" aria-label="Close modal">&times;</button>
+                </header>
+                <form id="requestForm">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="bookTitleDisplay">Book</label>
+                            <input type="text" id="bookTitleDisplay" readonly class="input-readonly">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentName">Student Name <span class="required">*</span></label>
+                            <input type="text" id="studentName" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentId">Student ID <span class="required">*</span></label>
+                            <input type="text" id="studentId" placeholder="e.g. 2024001" required pattern="[0-9]+"
+                                title="Please enter a valid numeric ID">
+                        </div>
+                    </div>
+                    <footer class="modal-footer">
+                        <button type="button" class="btn btn-secondary close-btn">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                    </footer>
+                </form>
+            </div>
+        </div>
+
+        <!-- Student Dashboard Modal -->
+        <div id="studentModal" class="modal-overlay" aria-hidden="true">
+            <div class="modal-card wide-card" role="dialog" aria-modal="true">
+                <header class="modal-header">
+                    <h2>Student Dashboard</h2>
+                    <button class="close-icon" aria-label="Close modal">&times;</button>
+                </header>
+                <div class="modal-body dashboard-body">
+                    <!-- Profile Card -->
+                    <div class="profile-section">
+                        <div class="profile-avatar">👨‍🎓</div>
+                        <div class="profile-info">
+                            <h3 id="dashName">John Doe</h3>
+                            <p>ID: <span id="dashId">2024001</span></p>
+                            <p class="course-badge">Computer Science</p>
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <!-- Request History -->
+                    <h3>Request History</h3>
+                    <div class="table-container">
+                        <table class="status-table">
+                            <thead>
+                                <tr>
+                                    <th>Book Title</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="requestTableBody">
+                                <!-- Requests Injected Here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <footer class="modal-footer">
+                    <button class="btn btn-secondary close-btn">Close</button>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotModal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-card" role="dialog" aria-modal="true">
+            <header class="modal-header">
+                <h2>Reset Password</h2>
+                <button class="close-icon details-close" aria-label="Close modal">&times;</button>
+            </header>
+            <form id="forgotForm">
+                <div class="modal-body">
+                    <p style="margin-bottom:1rem; font-size: 0.9rem; color: #64748b;">Enter your email address and we'll
+                        send you a link to reset your password.</p>
+                    <div class="form-group">
+                        <label for="forgotEmail">Email Address</label>
+                        <input type="email" id="forgotEmail" placeholder="name@example.com" required>
+                    </div>
+                </div>
+                <footer class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-forgot">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Send Reset Link</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Action Successful</div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
